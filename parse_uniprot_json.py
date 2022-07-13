@@ -59,15 +59,29 @@ def get_pdb(gene):
   # https://rest.uniprot.org/uniprotkb/search?query=gene:{gene}+AND+organism_id:9606&fields=xref_alphafolddb,xref_bmrb,xref_pcddb,xref_pdb,xref_pdbsum,xref_sasbdb,xref_smr
 
 
+def genes_from_file(filename):
+  with open(filename, "r") as f:
+    contents = f.read()
+    genes = list(map(lambda x: x.strip(), contents.split(',')))
+    return genes
+
 ## __main__
 import sys
 
-#res = None
-if (len(sys.argv) < 2):
+genes = []
+if len(sys.argv) < 2:
   print("Error: please provide gene name as an argument")
+  exit(1)
+elif sys.argv[1] != '-f':
+  genes = sys.argv[1:] 
+elif len(sys.argv) == 3: # parse a comma separated list
+  print(f"loading genes from file {sys.argv[2]}")
+  genes = genes_from_file(sys.argv[2])
 else:
-  genes = sys.argv[1:]
-  for gene in genes:
-    get_pdb(gene)  
-  #res = get_pdb(gene)
+  print("Error malformated args")
+  exit(1)
 
+
+print(f"Loading pfb files for {len(genes)} genes")
+for gene in genes:
+  get_pdb(gene) 
