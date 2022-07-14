@@ -15,6 +15,7 @@ def get_pdb(gene):
   uniprot_link = f"https://rest.uniprot.org/uniprotkb/search?query=gene:{gene}+AND+organism_id:9606" + \
       f"&fields={','.join(fields)}"
   response_json = requests.get(uniprot_link).json()
+  # TODO cache results with pickle so we can re-run in the future without having to call Uniprot every time
 
   # 2. get a uniprot result. fail if missing
   if len(response_json["results"]) == 0:
@@ -30,6 +31,7 @@ def get_pdb(gene):
   structures_by_db = dict(map(lambda s: (s["database"], s), structures))
 
   # 4. Pull down PDB or get it from colabFold
+  # TODO add cases for x-ray crystallography data. Look into setting up an AF2 API for structureless proteins
   url = None
   source = ""
   if "AlphaFoldDB" in structures_by_db:
