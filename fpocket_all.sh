@@ -7,7 +7,9 @@
 mkdir -p fpocket_out
 
 # Loop through all PDB files and run fpocket on each one
-for pdb_file in $(ls data/*.pdb)
+# TODO this loop never ends
+FILES=$(ls data/*.pdb)
+for pdb_file in $FILES
 do
   echo $pdb_file # check filename
   echo ${pdb_file%.*}_out # check output filename is as expected
